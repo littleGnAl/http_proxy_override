@@ -14,22 +14,44 @@ Future<String?> _getProxyPort() async {
 }
 
 class HttpProxyOverride extends HttpOverrides {
-  late final String? host;
-  late final String? port;
+  final String? host;
+  final String? port;
+  final bool ignoreBadCertificates;
+  final List<Certificate>? trustedCertificates;
 
-  HttpProxyOverride._(this.host, this.port);
+  HttpProxyOverride._(this.host, this.port, this.ignoreBadCertificates,
+      this.trustedCertificates);
 
-  static Future<HttpProxyOverride> createHttpProxy() async {
-    return HttpProxyOverride._(await _getProxyHost(), await _getProxyPort());
+  static Future<HttpProxyOverride> createHttpProxy(
+      {bool ignoreBadCertificates = false,
+      List<Certificate>? trustedCertificates}) async {
+    return HttpProxyOverride._(await _getProxyHost(), await _getProxyPort(),
+        ignoreBadCertificates, trustedCertificates);
   }
 
   @override
   HttpClient createHttpClient(SecurityContext? context) {
+    if (trustedCertificates != null &&
+        trustedCertificates?.isNotEmpty == true) {
+      if (context == null) {
+        context = SecurityContext.defaultContext;
+      }
+
+      trustedCertificates?.forEach((Certificate cert) {
+        context?.setTrustedCertificatesBytes(cert.certificateBytes,
+            password: cert.password);
+      });
+    }
+
     var client = super.createHttpClient(context);
-    client.badCertificateCallback =
-        (X509Certificate cert, String host, int port) {
-      return true;
-    };
+
+    if (ignoreBadCertificates) {
+      client.badCertificateCallback =
+          (X509Certificate cert, String host, int port) {
+        return true;
+      };
+    }
+
     return client;
   }
 
@@ -53,4 +75,21 @@ class HttpProxyOverride extends HttpOverrides {
 
     return super.findProxyFromEnvironment(url, environment);
   }
+}
+
+class Certificate {
+  /// The bytes of a PEM or PKCS12 file containing X509 certificates.
+  ///
+  /// Example:
+  /// ```
+  ///    Certificate(
+  ///        await new File('some-certificate.pem').readAsBytes()
+  ///    );
+  /// ```
+  final List<int> certificateBytes;
+
+  /// An optional password required to read the contents of [certificateBytes].
+  final String? password;
+
+  Certificate(this.certificateBytes, {this.password});
 }
