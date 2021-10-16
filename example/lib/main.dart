@@ -6,7 +6,7 @@ import 'package:http_proxy_override/http_proxy_override.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   HttpProxyOverride httpProxyOverride =
-      await HttpProxyOverride.createHttpProxy();
+      await HttpProxyOverride.create();
   HttpOverrides.global = httpProxyOverride;
   runApp(MyApp(
     httpProxyOverride.host,
