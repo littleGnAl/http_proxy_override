@@ -2,7 +2,8 @@
 [![Build Status](https://api.cirrus-ci.com/github/littleGnAl/http_proxy_override.svg)](https://cirrus-ci.com/github/littleGnAl/http_proxy_override) 
 [![pub package](https://img.shields.io/pub/v/http_proxy_override.svg)](https://pub.dev/packages/http_proxy_override)
 
-**http_proxy_override** get the proxy settings from system, so you can set up proxy for [http](https://pub.dev/packages/http), that allow you to use Charles or other proxy tools in Flutter.
+**http_proxy_override** get the proxy settings from system, so you can set up proxy for 
+[http](https://pub.dev/packages/http), that allow you to use Charles or other proxy tools in Flutter.
 
 ## Usage
 
@@ -12,7 +13,7 @@ You should set up before the [http](https://pub.dev/packages/http) request, typi
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   HttpProxyOverride httpProxyOverride =
-      await HttpProxyOverride.createHttpProxy();
+      await HttpProxyOverride.create();
   HttpOverrides.global = httpProxyOverride;
   runApp(MyApp());
 }
