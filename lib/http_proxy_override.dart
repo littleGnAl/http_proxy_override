@@ -3,8 +3,6 @@ import 'dart:io';
 
 import 'package:flutter/services.dart';
 
-import 'certificate.dart';
-
 MethodChannel _channel = MethodChannel('com.littlegnal.http_proxy_override');
 
 Future<String?> _getProxyHost() async {
@@ -16,9 +14,9 @@ Future<String?> _getProxyPort() async {
 }
 
 class HttpProxyOverride extends HttpOverrides {
-
   /// The host part of the proxy address.
   final String? host;
+
   /// The port part of the proxy address.
   final String? port;
 
@@ -27,14 +25,10 @@ class HttpProxyOverride extends HttpOverrides {
   /// root certificates.
   final bool ignoreBadCertificates;
 
-  /// Certificates added to the set of trusted X509 certificates used by
-  /// [SecureSocket] client connections. Servers configured with these
-  /// certificates will be trusted and HTTPS connections to the servers will be
-  /// allowed.
-  final List<Certificate>? trustedCertificates;
+  final SecurityContext securityContext;
 
-  HttpProxyOverride._(this.host, this.port, this.ignoreBadCertificates,
-      this.trustedCertificates);
+  HttpProxyOverride._(
+      this.host, this.port, this.ignoreBadCertificates, this.securityContext);
 
   /// Create an instance of [HttpProxyOverride].
   ///
@@ -51,31 +45,27 @@ class HttpProxyOverride extends HttpOverrides {
   /// this enables MITM attacks.
   /// Default: `false`.
   ///
-  /// [trustedCertificates] is an optional list of [Certificate]s that will be
-  /// added to the set of trusted X509 certificates used by [SecureSocket]
-  /// client connections. Servers configured with these certificates will be
-  /// trusted and HTTPS connections to the servers will be allowed.
+  /// With [securityContext] a [SecurityContext] can be provided that is used to
+  /// construct the [HttpClient]. This can be useful to provide a
+  /// [SecurityContext] that is configured with certificates that a proxy
+  /// server requires.
   ///
-  /// Supported platforms to read proxy settings from are iOS and Android.
+  /// Supported platforms to read proxy settings from are **iOS** and
+  /// **Android**.
   static Future<HttpProxyOverride> create(
       {bool ignoreBadCertificates = false,
-      List<Certificate>? trustedCertificates}) async {
-    return HttpProxyOverride._(await _getProxyHost(), await _getProxyPort(),
-        ignoreBadCertificates, trustedCertificates);
+      SecurityContext? securityContext}) async {
+    return HttpProxyOverride._(
+        await _getProxyHost(),
+        await _getProxyPort(),
+        ignoreBadCertificates,
+        securityContext ?? SecurityContext.defaultContext);
   }
 
   @override
   HttpClient createHttpClient(SecurityContext? context) {
-    if (trustedCertificates != null &&
-        trustedCertificates?.isNotEmpty == true) {
-      if (context == null) {
-        context = SecurityContext.defaultContext;
-      }
-
-      trustedCertificates?.forEach((Certificate cert) {
-        context?.setTrustedCertificatesBytes(cert.certificateBytes,
-            password: cert.password);
-      });
+    if (context == null) {
+      context = this.securityContext;
     }
 
     var client = super.createHttpClient(context);
