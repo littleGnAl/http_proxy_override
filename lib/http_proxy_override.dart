@@ -94,8 +94,8 @@ class HttpProxyOverride extends HttpOverrides {
       environment['http_proxy'] = '$host:$port';
       environment['https_proxy'] = '$host:$port';
     } else {
-      environment['http_proxy'] = '$host:8888';
-      environment['https_proxy'] = '$host:8888';
+      environment['http_proxy'] = '$host';
+      environment['https_proxy'] = '$host';
     }
 
     return super.findProxyFromEnvironment(url, environment);
