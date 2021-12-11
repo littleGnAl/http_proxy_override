@@ -24,7 +24,7 @@ void main() {
     "Should get null proxy host, proxy port when http proxy not set",
     (WidgetTester tester) async {
       HttpProxyOverride httpProxyOverride =
-          await HttpProxyOverride.createHttpProxy();
+          await HttpProxyOverride.create();
       HttpOverrides.global = httpProxyOverride;
 
       await tester.pumpWidget(app.MyApp(
@@ -47,7 +47,7 @@ void main() {
       );
 
       HttpProxyOverride httpProxyOverride =
-          await HttpProxyOverride.createHttpProxy();
+          await HttpProxyOverride.create();
       HttpOverrides.global = httpProxyOverride;
 
       await tester.pumpWidget(app.MyApp(
