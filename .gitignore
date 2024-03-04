@@ -7,3 +7,6 @@
 build/
 *.iml
 **/.idea
+
+.vscode
+.local.properties
