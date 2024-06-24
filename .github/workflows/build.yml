@@ -39,9 +39,7 @@ jobs:
           heap-size: 4096M
           disk-size: 8192M
           script: |
-            flutter doctor -v
-            cd example
-            flutter drive --driver=test_driver/integration_test.dart --target=integration_test/http_proxy_override_test.dart
+            flutter doctor -v && cd example && flutter drive --driver=test_driver/integration_test.dart --target=integration_test/http_proxy_override_test.dart
 
   integration_test_ios:
     name: Run Flutter iOS Integration Tests
