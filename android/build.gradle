@@ -38,17 +38,6 @@ android {
     if (project.android.hasProperty('namespace')) {
         namespace = "com.littlegnal.http_proxy_override"
     }
-
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
-    }
-
-    kotlinOptions {
-        tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
-            kotlinOptions.jvmTarget = "1.8"
-        }
-    }
 }
 
 dependencies {
