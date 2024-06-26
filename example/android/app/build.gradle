@@ -25,10 +25,6 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
-kotlin {
-    jvmToolchain(17)
-}
-
 android {
     namespace = "com.littlegnal.http_proxy_override_example"
     compileSdkVersion 34
