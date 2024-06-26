@@ -38,6 +38,10 @@ android {
     if (project.android.hasProperty('namespace')) {
         namespace = "com.littlegnal.http_proxy_override"
     }
+
+    kotlin {
+        jvmToolchain(17)
+    }
 }
 
 dependencies {
