@@ -1,10 +1,10 @@
 name: http_proxy_override
 description: A plugin that get the proxy settings from system.
-version: 1.0.0
+version: 1.0.1
 homepage: https://github.com/littleGnAl/http_proxy_override
 
 environment:
-  sdk: ">=2.12.0 <3.0.0"
+  sdk: ">=2.12.0 <4.0.0"
   flutter: ">=1.20.0"
 
 dependencies:
